@@ -1,5 +1,7 @@
+
 import pygame
 import random
+
 
 class Pipe:
     def __init__(self, x, screen_height, gap=150, width=70, speed=4):
@@ -8,7 +10,15 @@ class Pipe:
         self.gap = gap
         self.speed = speed
         self.screen_height = screen_height
-        self.gap_y = random.randint(100, screen_height - 100 - gap)
+
+        # Keep the gap within valid screen boundaries.
+        min_gap_y = 50
+        max_gap_y = max(
+            min_gap_y,
+            screen_height - gap - 50
+        )
+        self.gap_y = random.randint(min_gap_y, max_gap_y)
+
         self.scored = False
 
     def move(self):
@@ -18,8 +28,15 @@ class Pipe:
         return self.x + self.width < 0
 
     def top_rect(self):
-        return pygame.Rect(self.x, 0, self.width, self.gap_y)
+        return pygame.Rect(
+            int(self.x), 0, self.width, self.gap_y
+        )
 
     def bottom_rect(self):
         bottom_y = self.gap_y + self.gap
-        return pygame.Rect(self.x, bottom_y, self.width, self.screen_height - bottom_y)
+        return pygame.Rect(
+            int(self.x),
+            bottom_y,
+            self.width,
+            self.screen_height - bottom_y
+        )
